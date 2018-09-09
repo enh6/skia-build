@@ -1,3 +1,18 @@
 language: cpp
 compiler: clang
-script: build-skia.py --branch=chrome/m70
+before_install:
+- yes | sudo add-apt-repository ppa:deadsnakes/ppa
+- sudo apt-get update
+- sudo apt-get install python3.6
+script: python3.6 build-skia.py --branch=chrome/m70
+deploy:
+  provider: releases
+  api_key:
+    secure: Hg9NqmsLnSAI56WLmF5t3yBenmkh1Q8BW4rnJlRxTg9362kALK2enKiMWJ5+E3pZXkFoW2G20plArvOQFChK61fAm7FC3qyIt7z3LH9DSMwW2TLq+4JephuTBzG36D7kJG/nTcWyIxai9ZlwmIM5HpTncY2cTA4gxIkyoSrxmB9N4RyFyzcwZBurxwxM+Ji2evwBE5CWsHyM5HGMuRH5kwP9ij3L85vGxsni/+fHcvsnmDtQCKT/kv/Fr5/yuo2awkcOm5xMVZ/ExVR5SSIMLFoJrdKhOf3JePTjQMhvHzZBVGksvrr+r8YzJGI2YBVPfnQt83EHxEWY7e5qmmeHKeAv1AN/r4M5FgrMjGclCIJUYgwPVuR5+CY0O75Ycufeq1lW5MDlcjg0mIQGD8/WpnrxXOx5UuvW0tYa5Spv9EtN8bq9MTE9RCi2Lp0WMh+bUEcja2bRRmuwm9i4NdMNrxvkcOyu1XIdKbvstNZZRTWeSEqaDySKSbM2R8xVXrxEUZkocw/+icIfw6WXyXfBueD6+8FSHHj8cYbQurUCCtrLZcE2LsqzLey9niyHqtSK6+S/T/M7GRqkv78QCAfx0NN5CDJO1RLtzP4lDNeCnswxClWt+sjFOdk+kiiQQwLEJCNF950i2T/7Nlmi89jGaj4w4oOIYdyiMui5JpLw8mI=
+  file:
+    - "libskia-linux-x64.so"
+    - "libskia-linux-x64.a"
+    - "skia-headers.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true

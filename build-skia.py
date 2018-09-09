@@ -33,16 +33,35 @@ run(['git', '-C', 'skia', 'pull'])
 run(['python', 'skia/tools/git-sync-deps'])
 
 # build
-args = ['is_official_build=true',
+shared_args = [
     'is_component_build=true',
-    'cc="clang" cxx="clang++"',
+    'is_official_build=true',
     'skia_enable_tools=false',
     'target_os="linux" target_cpu="x64"',
+    'cc="clang" cxx="clang++"',
     'skia_use_icu=false skia_use_sfntly=false skia_use_piex=true',
     'skia_use_system_expat=false skia_use_system_freetype2=false',
     'skia_use_system_libjpeg_turbo=false skia_use_system_libpng=false',
     'skia_use_system_libwebp=false skia_use_system_zlib=false',
     'skia_enable_gpu=true']
-run(['./skia/bin/gn', '--root=skia', 'gen', 'skia/out/linux-x64-shared', '--args=' + ' '.join(args)])
+static_args = [
+    'is_official_build=true',
+    'skia_enable_tools=false',
+    'target_os="linux" target_cpu="x64"',
+    'cc="clang" cxx="clang++"',
+    'skia_use_icu=false skia_use_sfntly=false skia_use_piex=true',
+    'skia_use_system_expat=false skia_use_system_freetype2=false',
+    'skia_use_system_libjpeg_turbo=false skia_use_system_libpng=false',
+    'skia_use_system_libwebp=false skia_use_system_zlib=false',
+    'skia_enable_gpu=true']
+run(['./skia/bin/gn', '--root=skia', 'gen', 'skia/out/linux-x64-shared', '--args=' + ' '.join(shared_args)])
 run(['./depot_tools/ninja', '-C', 'skia/out/linux-x64-shared', 'skia'])
-run(['ls', '-lh', 'skia/out/linux-x64-shared'])
+run(['./skia/bin/gn', '--root=skia', 'gen', 'skia/out/linux-x64-static', '--args=' + ' '.join(static_args)])
+run(['./depot_tools/ninja', '-C', 'skia/out/linux-x64-static', 'skia'])
+
+run(['cp', 'skia/out/linux-x64-shared/libskia.so', 'libskia-linux-x64.so'])
+run(['strip', '-s', 'libskia-linux-x64.so'])
+run(['cp', 'skia/out/linux-x64-static/libskia.a', 'libskia-linux-x64.a'])
+run(['tar', '-czf', 'skia-headers.tar.gz', 'skia/include/'])
+
+print("Finish")
