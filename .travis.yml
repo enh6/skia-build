@@ -1,0 +1,3 @@
+language: cpp
+compiler: clang
+script: build-skia.py --branch=chrome/m70
