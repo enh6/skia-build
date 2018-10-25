@@ -4,7 +4,7 @@ before_install:
 - yes | sudo add-apt-repository ppa:deadsnakes/ppa
 - sudo apt-get update
 - sudo apt-get install python3.6
-script: python3.6 build-skia.py --branch=chrome/m70
+script: python3.6 build-skia.py --branch=chrome/m71
 deploy:
   provider: releases
   api_key:
